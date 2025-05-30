@@ -35,7 +35,7 @@ st.markdown("""
 <style>
 /* ==== 전체 앱 배경 이미지 완전 적용 ==== */
 html, body, .stApp {
-    background-image: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEVYfgK-3JnA6hqyaEublAItSRg9NcTgLhP81MA6FGjQ6tYMPl6edg_stDRkRbTmRYLGbOnCaqYpQizsZv1_YQpLGbj1XWvZFO3UCJDFfAwpLHhTyuKYNigBGCSEDpCN2P9GfMDSAnMdpyv4D_NgK7s7nee-NIFj1GzK-Gp7dnnyKoqtUun6AAFzekaisw/s320/ChatGPT%20Image%202025%EB%85%84%205%EC%9B%94%2031%EC%9D%BC%20%EC%98%A4%EC%A0%84%2001_23_10.png");
+    background-image: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj2EZC4fsiILA6G_eu_pnhhR4vkOvi3L8_x7IMyZigrlGBK5Xinz_SLCH8gbgfJ5ec0cFu0o9gYx95QiYn6YQtex_FmIKoR44u-6A7UyIz_OwJLlXQXFDGot5ygJcL9-D9AGzzmsHlesC7W-1KbdSu0R5juStzSQF392c7EgBqWrAosse-mJlDVxfshhHr-/s320/ChatGPT%20Image%202025%EB%85%84%205%EC%9B%94%2031%EC%9D%BC%20%EC%98%A4%EC%A0%84%2001_43_09.png");
     background-size: cover !important;
     background-position: center !important;
     background-attachment: fixed !important;
