@@ -35,7 +35,7 @@ st.markdown("""
 <style>
 /* ==== 전체 앱 배경 이미지 완전 적용 ==== */
 html, body, .stApp {
-    background-image: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj2EZC4fsiILA6G_eu_pnhhR4vkOvi3L8_x7IMyZigrlGBK5Xinz_SLCH8gbgfJ5ec0cFu0o9gYx95QiYn6YQtex_FmIKoR44u-6A7UyIz_OwJLlXQXFDGot5ygJcL9-D9AGzzmsHlesC7W-1KbdSu0R5juStzSQF392c7EgBqWrAosse-mJlDVxfshhHr-/s320/ChatGPT%20Image%202025%EB%85%84%205%EC%9B%94%2031%EC%9D%BC%20%EC%98%A4%EC%A0%84%2001_43_09.png");
+    background-image: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgjzYaPOcaFmVZ2eJCpNVGJwIAcAKcGymqLfDfPKhLSV57kk78TPv2QrlU3lfdpXf-ljtq_5BKhEN1cG0fXSgpGROVtlet27V31fo9-U5JFRvBTnfGOE4ST9p71uw5vgRHb2xiJKL-d8H0ad1xafK_BG3jh4iSHUAMn37GxEOY2roENSUJMeEnTRN3o1hSx/s320/ChatGPT%20Image%202025%EB%85%84%205%EC%9B%94%2029%EC%9D%BC%20%EC%98%A4%ED%9B%84%2003_05_44.png");
     background-size: cover !important;
     background-position: center !important;
     background-attachment: fixed !important;
@@ -261,16 +261,18 @@ elif mode == "부분 암송 테스트":
 
 
 elif mode == "전체 암송 테스트":
-    st.subheader("\U0001f9e0 전체 암송 테스트")
+    st.subheader("🧠 전체 암송 테스트")
+    
+    # 전체 보기/결과 보기 토글
     col1, col2 = st.columns([1, 1])
     with col1:
         show_answer = st.toggle("전체 정답 보기", value=False)
     with col2:
         show_result = st.toggle("결과 보기", value=False)
 
+    # 스타일 적용
     st.markdown("""
         <style>
-        /* 절 번호 스타일 */
         .verse-label {
             display: inline-block;
             background: rgba(255,255,255,0.94);
@@ -283,11 +285,10 @@ elif mode == "전체 암송 테스트":
             box-shadow: 0 2px 12px rgba(70,70,120,0.13);
         }
 
-        /* textarea 내부 placeholder 스타일 (정답 표시용) */
         textarea::placeholder {
-            font-size: 18px !important;  /* 정답 글자 크기 별도 조정 */
-            color: black !important;
-            opacity: 1 !important;
+            font-size: 0.95em !important;
+            color: #888 !important;
+            opacity: 0.75 !important;
         }
 
         .result-tag {
@@ -308,28 +309,32 @@ elif mode == "전체 암송 테스트":
     for i in range(len(verse_texts)):
         correct_text = verse_texts[i]
         key = f"full_{i}"
+
+        # 세션 초기화
         if key not in st.session_state:
             st.session_state[key] = ""
 
-        # 절 번호 라벨 박스 (부분 테스트와 통일)
-        st.markdown(
-            f"""<span class="verse-label">{i+1}절</span>""",
-            unsafe_allow_html=True
-        )
+        # 절 번호 출력
+        st.markdown(f"""<span class="verse-label">{i+1}절</span>""", unsafe_allow_html=True)
 
-        # 절별 정답 보기 체크박스
+        # 절별 정답 보기 토글
         show_individual_answer = st.checkbox(f"{i+1}절 정답 보기", key=f"show_ans_{i}")
 
-        # 입력창 생성
-        if show_answer or show_individual_answer:
+        # 정답 표시 여부
+        showing_answer = show_answer or show_individual_answer
+
+        # 입력창 출력
+        if showing_answer:
+            # 정답 보기 상태 → 입력 비활성화용 더미 key 사용
             input_text = st.text_area(
                 "",
-                value=st.session_state[key],
-                key=key,
-                placeholder=correct_text,
+                value=correct_text,
+                key=f"view_only_{i}",  # 실제 세션 상태에 영향 없음
+                placeholder="",
                 label_visibility="collapsed"
             )
         else:
+            # 사용자 입력창
             input_text = st.text_area(
                 "",
                 value=st.session_state[key],
@@ -340,11 +345,24 @@ elif mode == "전체 암송 테스트":
 
         user_inputs.append(input_text)
 
-        # 결과 평가 출력 (기존 그대로 유지)
+        # ✅ 결과 평가: 입력 없으면 오답 / 정답 보기 중일 땐 표시만
         if show_result:
-            is_correct = compare_texts(correct_text, input_text.strip()) if input_text.strip() else False
-            st.markdown(
-                f"<div class='result-tag {'wrong' if not is_correct else ''}'>"
-                f"{'✅ 정답' if is_correct else '❌ 오답'}</div>",
-                unsafe_allow_html=True
-            )
+            user_input = st.session_state.get(key, "").strip()
+
+            if not user_input:
+                # 입력이 없으면 무조건 오답
+                st.markdown(
+                    f"<div class='result-tag wrong'>❌ 오답</div>",
+                    unsafe_allow_html=True
+                )
+            elif not showing_answer:
+                # 입력 있고 정답 보기 중이 아닐 때만 평가
+                is_correct = compare_texts(correct_text, user_input)
+                st.markdown(
+                    f"<div class='result-tag {'wrong' if not is_correct else ''}'>"
+                    f"{'✅ 정답' if is_correct else '❌ 오답'}</div>",
+                    unsafe_allow_html=True
+                )
+            else:
+                # 정답 보기 중일 땐 결과 생략 (이미 보여주고 있으므로)
+                pass
