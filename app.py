@@ -4,6 +4,12 @@ import difflib
 import pandas as pd
 import base64
 
+# ✅ ⬇️ 여기 바로 아래에 붙여주세요
+@st.cache_resource
+def get_encoded_audio(file_path):
+    with open(file_path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
 # --- 파일 경로 설정 ---
 audio_dir = "audio"
 full_audio_file = os.path.join(audio_dir, "full_audio.wav")
