@@ -177,7 +177,10 @@ elif mode == "전체 듣기":
     """, unsafe_allow_html=True)
 
     # 🎵 제목
-    st.markdown("<div class='audio-title'>🎵 전체 오디오 자동 재생</div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div class='audio-title'>🎵 전체 오디오 자동 재생</div>",
+        unsafe_allow_html=True
+    )
 
     # ✅ 감싸는 라디오 박스
     st.markdown("<div class='radio-container'>", unsafe_allow_html=True)
@@ -203,7 +206,7 @@ elif mode == "전체 듣기":
     )
 
     # ✅ 오디오 출력
-   if os.path.exists(full_audio_file):
+    if os.path.exists(full_audio_file):
         # 오디오 base64로 인코딩 → <audio> HTML 삽입
         with open(full_audio_file, "rb") as f:
             audio_bytes = f.read()
