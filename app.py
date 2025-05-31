@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import difflib
 import pandas as pd
+import base64
 
 # --- 파일 경로 설정 ---
 audio_dir = "audio"
@@ -202,8 +203,19 @@ elif mode == "전체 듣기":
     )
 
     # ✅ 오디오 출력
-    if os.path.exists(full_audio_file):
-        st.audio(full_audio_file, format="audio/wav")
+   if os.path.exists(full_audio_file):
+        # 오디오 base64로 인코딩 → <audio> HTML 삽입
+        with open(full_audio_file, "rb") as f:
+            audio_bytes = f.read()
+            b64_audio = base64.b64encode(audio_bytes).decode()
+
+        loop_attr = "loop" if playback_mode == "반복 재생" else ""
+        st.markdown(f"""
+            <audio controls autoplay {loop_attr} style="width: 100%; margin-top: 8px;">
+                <source src="data:audio/wav;base64,{b64_audio}" type="audio/wav">
+                브라우저가 오디오를 지원하지 않습니다.
+            </audio>
+        """, unsafe_allow_html=True)
     else:
         st.error("full_audio.wav 파일을 audio 폴더 안에 넣어주세요.")
 
