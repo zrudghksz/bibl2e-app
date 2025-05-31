@@ -214,7 +214,7 @@ elif mode == "전체 듣기":
 
         loop_attr = "loop" if playback_mode == "반복 재생" else ""
         st.markdown(f"""
-            <audio controls autoplay {loop_attr} style="width: 100%; margin-top: 8px;">
+            <audio controls {loop_attr} style="width: 100%; margin-top: 8px;">
                 <source src="data:audio/wav;base64,{b64_audio}" type="audio/wav">
                 브라우저가 오디오를 지원하지 않습니다.
             </audio>
